@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files（重要：不提交原始数据）
+data/raw/
+data/processed/
+!data/processed/.gitkeep
+*.xls
+*.xlsx
+*.csv
+
+# Model files
+*.pt
+*.pth
+*.h5
+
+# Results
+results/
+*.log
+
+# Environment
+.env
+*.bak

@@ -1,0 +1,112 @@
+# The following are parameter configurations related to data, model, features, and metrics.
+# Readers can adjust the parameters according to their own datasets, application scenarios, etc.
+
+# ============================================================
+# Data Configuration
+# ============================================================
+data:
+  raw_data_path: "data/raw"
+  processed_data_path: "data/processed"
+  seq_length: 6                    # Sequence length (6 months, monthly data)
+  stride: 1                        # Sliding window stride
+  train_ratio: 0.8                 # Training set proportion
+  val_ratio: 0.0                   # Validation set proportion (early stopping uses test set)
+  test_ratio: 0.2                  # Test set proportion
+
+# ============================================================
+# Data Augmentation Configuration
+# ============================================================
+augmentation:
+  base_seq_length: 6               # Base sequence length for sliding window
+  multi_scale_lengths: [3, 4, 5, 7, 8]  # Multi-scale sampling sequence lengths
+  noise_levels: [0.01, 0.02]       # Gaussian noise standard deviation
+  enable: true                     # Enable data augmentation
+
+# ============================================================
+# Model Configuration
+# ============================================================
+model:
+  # Multi-scale 1D-CNN parameters
+  kernel_sizes: [7, 30, 90]        # Convolution kernel sizes (short/medium/long term)
+  cnn_out_channels: 32             # CNN output channels per path
+
+  # GRU parameters
+  gru_hidden_dim: 128              # GRU hidden layer dimension
+  gru_num_layers: 1                # Number of GRU layers (original paper value)
+
+  # Transformer parameters
+  transformer_nhead: 8             # Number of multi-head attention heads
+  transformer_layers: 2            # Number of Transformer encoder layers
+  transformer_dim_feedforward: 512 # Feedforward network dimension (hidden_dim * 4)
+
+  # General parameters
+  dropout: 0.1                     # Dropout rate
+  activation: "relu"               # Activation function (relu / gelu)
+
+# ============================================================
+# Feature Groups
+# ============================================================
+feature_groups:
+  short_term:                      # Climate-driven group (10 features)
+    - "ISI"
+    - "FFMC"
+    - "temperature_change_rate"
+    - "temperature_anomaly"
+    - "surface_temperature"
+    - "net_radiation"
+    - "total_radiation"
+    - "uv_radiation"
+    - "photosynthetic_active_radiation"
+    - "reflected_radiation"
+
+  mid_term:                        # Hydrological-driven group (5 features)
+    - "stemflow"
+    - "soil_water_storage"
+    - "DMC"
+    - "BUI"
+    - "sulfate_rain"
+
+  long_term:                       # Soil-driven group (6 features)
+    - "DC"
+    - "soil_temperature_5cm"
+    - "soil_temperature_10cm"
+    - "soil_temperature_60cm"
+    - "air_temperature"
+    - "pressure"
+
+# ============================================================
+# Training Configuration
+# ============================================================
+training:
+  batch_size: 32                   # Batch size
+  learning_rate: 0.001             # Initial learning rate
+  weight_decay: 1e-4               # L2 regularization coefficient
+  num_epochs: 200                  # Maximum number of epochs
+  early_stop_patience: 50          # Patience for early stopping
+  grad_clip: 1.0                   # Gradient clipping threshold
+
+  # Learning rate scheduler
+  scheduler:
+    type: "ReduceLROnPlateau"      # Scheduler type
+    factor: 0.5                    # Reduction factor
+    patience: 30                   # Patience before reducing LR
+    min_lr: 1e-6                   # Minimum learning rate
+
+# ============================================================
+# Evaluation Metrics
+# ============================================================
+metrics:
+  - "RMSE"                         # Root Mean Square Error
+  - "MAE"                          # Mean Absolute Error
+  - "R2"                           # R-squared (coefficient of determination)
+  - "MAPE"                         # Mean Absolute Percentage Error
+
+# ============================================================
+# Path Configuration
+# ============================================================
+paths:
+  results_dir: "results"           # Directory to save models and results
+  scaler_dir: "results"            # Directory to save scalers
+  predictions_file: "predictions.csv"
+  model_file: "best_model.pth"
+  training_results: "training_results.json"
