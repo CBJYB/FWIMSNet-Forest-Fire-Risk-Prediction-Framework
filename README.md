@@ -15,6 +15,7 @@ Dataset：
 ## Model Description:
 1.  FWI-MSNet is a physics-guided deep learning framework for forest fire risk prediction. By coupling multiple fuel and climate factors, this model achieves high-precision, interpretable forest fire danger forecasting.
 2.  Due to potential infringement issues with the source data, this project only provides demo data for readers to quickly test the code and understand the model structure. It does not represent the data volume used in the paper's experiments but is intended to demonstrate the model's effectiveness.
+3.  The demo data provided in this project is on a monthly scale, using a window logic of a 6-month window with a step size of 1 month for quick code testing. Readers can replace the demo data with their own complete dataset by modifying the data loading section, such as using a 180-day window with a step size of 1 day, to obtain better experimental results.
 
 ## Model Usage Steps：
 1.Data Preprocessing: Standardization, Data Augmentation(preprocess_data.py)
